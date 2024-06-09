@@ -32,7 +32,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 // });
 
 const salt = bcrypt.genSaltSync(10);
-const secret = "jbfgjkwbfbjwjgfbhbhdsfbv";
+const secret =process.env.secret_key;
 mongoose.connect(process.env.mongo_url);
 
 app.post("/register", async (req, res) => {
