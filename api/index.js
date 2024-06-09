@@ -9,8 +9,6 @@ const booking = require("./models/booking");
 const bcrypt = require("bcryptjs");
 const imageDownloader = require("image-downloader");
 const fs = require("fs");
-// const fileupload = require("express-fileupload");
-// const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
 
 require("dotenv").config();
@@ -20,16 +18,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-// app.use(
-//   fileupload({
-//     useTempFiles: true,
-//   })
-// );
-// cloudinary.config({
-//   cloud_name: process.env.cloud_name,
-//   api_key: process.env.api_key,
-//   api_secret: process.env.secret_key,
-// });
+
 
 const salt = bcrypt.genSaltSync(10);
 const secret =process.env.secret_key;
