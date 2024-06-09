@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input[type="text"],input[type="password"],input[type="email"],textarea,input[type="time"],input[type="number"],input[type="tel"]{
+    @apply w-full border rounded-lg px-3 py-3 mb-1 border-gray-500;
+}
+textarea{
+    height:150px
+}
