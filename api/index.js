@@ -35,7 +35,7 @@ cloudinary.config({
   api_secret: process.env.api_secret 
 });
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { name, email, password } = req.body;
   try {
@@ -50,7 +50,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { email, password } = req.body;
   const userDoc = await user.findOne({ email });
@@ -75,7 +75,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/api/profile", (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { token } = req.cookies;
   if (token) {
@@ -88,11 +88,11 @@ app.get("/profile", (req, res) => {
   }
 });
 
-app.get("/logout", (req, res) => {
+app.get("/api/logout", (req, res) => {
   res.clearCookie("token").json("ok");
 });
 
-app.post("/upload-by-link", async (req, res) => {
+app.post("/api/upload-by-link", async (req, res) => {
   const { link } = req.body;
 
   const result = await cloudinary.uploader.upload(link);
@@ -109,7 +109,7 @@ app.post("/upload-by-link", async (req, res) => {
 
 //const photosMiddleware=multer({dest:'uploads/'});
 
-app.post("/uploads", (req, res) => {
+app.post("/api/uploads", (req, res) => {
   const files = req.files.photos;
 
   const filesArray = Array.isArray(files) ? files : [files];
@@ -154,7 +154,7 @@ app.post("/uploads", (req, res) => {
   // res.json(uploadedfiles);
 
 
-app.post("/places", (req, res) => {
+app.post("/api/places", (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { token } = req.cookies;
   const {
@@ -189,7 +189,7 @@ app.post("/places", (req, res) => {
   });
 });
 
-app.get("/places", async (req, res) => {
+app.get("/api/places", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, async (err, user) => {
@@ -199,14 +199,14 @@ app.get("/places", async (req, res) => {
   });
 });
 
-app.get("/places/:id", async (req, res) => {
+app.get("/api/places/:id", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { id } = req.params;
   const placeDocs = await place.findById(id);
   res.json(placeDocs);
 });
 
-app.put("/places", async (req, res) => {
+app.put("/api/places", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { token } = req.cookies;
   const {
@@ -245,12 +245,12 @@ app.put("/places", async (req, res) => {
   });
 });
 
-app.get("/allplaces", async (req, res) => {
+app.get("/api/allplaces", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   res.json(await place.find().populate("owner", ["name"]));
 });
 
-app.post("/booking", async (req, res) => {
+app.post("/api/booking", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, async (err, user) => {
@@ -278,7 +278,7 @@ app.post("/booking", async (req, res) => {
   });
 });
 
-app.get("/booking", async (req, res) => {
+app.get("/api/booking", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, async (err, user) => {
@@ -292,7 +292,7 @@ app.get("/booking", async (req, res) => {
   });
 });
 
-app.get("/deletebooking/:id", async (req, res) => {
+app.get("/api/deletebooking/:id", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { id } = req.params;
 
@@ -307,7 +307,7 @@ app.get("/deletebooking/:id", async (req, res) => {
   });
 });
 
-app.post("/available", async (req, res) => {
+app.post("/api/available", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { id, checkOut, checkIn } = req.body;
  
@@ -327,7 +327,7 @@ app.post("/available", async (req, res) => {
   }
 });
 
-app.get("/search/:query",async (req,res)=>{
+app.get("/api/search/:query",async (req,res)=>{
   mongoose.connect(process.env.mongo_url);
 const {query}=req.params;
 const docs=await place.find({
