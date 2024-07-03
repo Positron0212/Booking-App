@@ -7,6 +7,7 @@ const Placepage = () => {
   const { id } = useParams();
   const [place, setplace] = useState({});
   const [showAllphotos, setshowAllphotos] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   useEffect(() => {
     axios.get(`/places/${id}`).then((response) => {
       const { data } = response;
@@ -14,10 +15,17 @@ const Placepage = () => {
     });
   }, [id]);
 
+  function handleshowmore() {
+    setShowMore(true);
+  }
+  function handleshowless() {
+    setShowMore(false);
+  }
+
   if (showAllphotos)
     return (
-      <div className="absolute inset-0 bg-white min-w-full min-h-screen ">
-        <h1 className="md:text-4xl text-center p-8 pb-0 max-md:text-lg">
+      <div className="absolute inset-0 bg-white min-w-full min-h-screen z-50">
+        <h1 className="md:text-4xl text-center p-8 pb-0 max-md:text-lg ">
           Photos of {place.title}
         </h1>
 
@@ -40,13 +48,9 @@ const Placepage = () => {
 
         <div className=" grid gap-4 p-3">
           {place?.photos?.length > 0 &&
-            place.photos.map((photo,index) => (
+            place.photos.map((photo, index) => (
               <div key={index}>
-                <img
-                  src={"http://localhost:4000/uploads/" + photo}
-                  alt=""
-                  className="m-auto"
-                />
+                <img src={photo} alt="" className="m-auto" />
               </div>
             ))}
         </div>
@@ -54,12 +58,14 @@ const Placepage = () => {
     );
   else {
     return (
-      <div className="mt-10 ">
-        <h1 className="lg:text-3xl md:text-2xl text-xl font-semibold ">{place.title}</h1>
+      <div className="mt-4 ">
+        <h1 className="lg:text-3xl md:text-2xl text-xl font-semibold ">
+          {place.title}
+        </h1>
         <a
           target="_blank"
           href={"https://map.google.com/?q=" + place.address}
-          className="inline-block my-1 underline max-sm:text-sm "
+          className="inline-block my-1 underline max-sm:text-sm text-lg text-gray-600"
         >
           <span className="flex items-center gap-1 ">
             <svg
@@ -81,7 +87,7 @@ const Placepage = () => {
           {place.photos?.[0] && (
             <div className="relative" onClick={() => setshowAllphotos(true)}>
               <img
-                src={"http://localhost:4000/uploads/" + place.photos[0]}
+                src={place.photos[0]}
                 alt=""
                 className="rounded-l-2xl object-cover lg:h-[450px] md:h-[350px] h-[300px] w-full object-center "
               />
@@ -93,7 +99,7 @@ const Placepage = () => {
             {place.photos?.[1] && (
               <div className="relative" onClick={() => setshowAllphotos(true)}>
                 <img
-                  src={"http://localhost:4000/uploads/" + place.photos[1]}
+                  src={place.photos[1]}
                   alt=""
                   className="rounded-tr-2xl object-cover object-center lg:h-[221px] md:h-[171px] h-[148px] w-full "
                 />
@@ -103,7 +109,7 @@ const Placepage = () => {
             {place.photos?.[2] && (
               <div className="relative" onClick={() => setshowAllphotos(true)}>
                 <img
-                  src={"http://localhost:4000/uploads/" + place.photos[2]}
+                  src={place.photos[2]}
                   alt=""
                   className="rounded-br-2xl object-cover object-center lg:h-[221px] md:h-[171px] h-[148px] w-full "
                 />
@@ -128,18 +134,75 @@ const Placepage = () => {
                   d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
                 />
               </svg>
-             <span className="text-sm md:text-base">Show all photos</span> 
+              <span className="text-sm md:text-base">Show all photos</span>
             </button>
           </div>
         </div>
 
         <div className="grid gap-2 md:mt-7 mt-5  grid-cols-1 md:grid-cols-[2fr_1fr] max-md:gap-1">
           <div>
-            <div className=" md:font-semibo   ld leading-8 md:mb-5 mb-3" >
-              <h2 className=" text-xl font-semibold  md:text-2xl lg:text-3xl mb-1">Description</h2>
-              {place.description}
+            <div className="leading-8 md:mb-5 mb-3 whitespace-pre-wrap  border-dashed border-b-2 border-gray-500 pb-2">
+              <h2 className=" text-xl font-semibold  md:text-2xl lg:text-3xl mb-1">
+                Description
+              </h2>
+              <div>
+                {place.description
+                  ? place.description.split(" ").slice(0, 100).join(" ") +
+                    " ...."
+                  : "No description available"}
+              </div>
+              <button
+                className="font-semibold  mt-3 underline"
+                onClick={handleshowmore}
+              >
+                <p className="flex items-center">
+                  Show more
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </p>
+              </button>
             </div>
-            <div className="text-primary font-semibold mb-5">
+            {showMore && (
+              <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center ">
+               
+                <div className="whitespace-pre-line bg-white p-6 rounded-lg max-w-3xl  mx-auto max-h-[30rem] overflow-y-auto">
+                <button onClick={handleshowless} className="w-full ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <h1 className="text-3xl font-bold mb-5">About this space</h1>
+                  {place.description}
+                </div>
+              </div>
+            )}
+            <div className="  mb-5  bg-white rounded-md p-2 shadow-lg ">
+              <h1 className="text-xl  md:text-2xl lg:text-3xl font-semibold mb-2 ">
+                Important Rules
+              </h1>
               Check-In: {place.checkIn} {place.checkIn < "12" ? "AM" : "PM"}
               <br />
               Check-Out: {place.checkOut} {place.checkOut < "12" ? "AM" : "PM"}
@@ -147,25 +210,28 @@ const Placepage = () => {
               Maximum number of guests: {place.maxGuests}
               <br />
             </div>
-          </div>
-          <div>
-            <BookinWidget place={place} />
-          </div>
-        </div>
+            <div>
+              <h2 className="text-xl  md:text-2xl lg:text-3xl font-semibold mb-1 border-dashed border-t-2 border-gray-500 pt-2">
+                What this place offers
+              </h2>
+              {place?.perks?.length > 0 &&
+                place.perks.map((perk, index) => (
+                  <ul key={index}>
+                    <li className="list-disc ml-8 md:text-lg ">{perk}</li>
+                  </ul>
+                ))}
+            </div>
 
-        <div>
-          <h2 className="text-xl  md:text-2xl lg:text-3xl font-semibold mb-1">Perks</h2>
-          {place?.perks?.length > 0 &&
-            place.perks.map((perk,index) => (
-              <ul key={index}>
-                <li className="list-disc ml-8 md:text-lg ">{perk}</li>
-              </ul>
-            ))}
-        </div>
-
-        <div className="md:mt-5 mt-3  ">
-          <h2 className="text-xl  md:text-2xl lg:text-3xl font-semibold">Extra Info:</h2>
-          <p className=" md:leading-7 text-gray-600">{place.extrainfo}</p>
+            <div className="md:mt-5 mt-3  ">
+              <h2 className="text-xl  md:text-2xl lg:text-3xl font-semibold pt-2 border-dashed border-t-2 border-gray-500 ">
+                Extra Info:
+              </h2>
+              <p className=" md:leading-7 text-gray-600 whitespace-pre-wrap">
+                {place.extrainfo}
+              </p>
+            </div>
+          </div>
+          <div>{!showMore && <BookinWidget place={place} />}</div>
         </div>
       </div>
     );

@@ -25,7 +25,7 @@ const Placespage = () => {
               <div className="w-[15rem] h-[15rem]  max-sm:w-[8rem] max-sm:h-[8rem]  max-md:w-[12rem] max-md:h-[12rem] overflow-hidden  shrink-0 rounded-l-2xl">
                 {place.photos.length > 0 && (
                   <img
-                    src={`http://localhost:4000/uploads/${place.photos[0]}`}
+                    src={place.photos[0]}
                     alt=""
                     className="object-cover w-full h-full"
                   />
@@ -61,10 +61,10 @@ const Placespage = () => {
           ))}
       </div>
 
-      <div className="text-center mt-8">
+      <div className="text-center mt-5">
         <Link
           to={"/account/places/new"}
-          className=" inline-flex gap-2 bg-primary text-white py-3 px-5 rounded-full items-center max-md:text-sm"
+          className=" inline-flex gap-2 bg-primary text-white py-3 px-5 rounded-full items-center max-md:text-sm mb-1"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

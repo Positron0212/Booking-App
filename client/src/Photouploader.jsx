@@ -38,11 +38,13 @@ const Photouploader = ({ addedPhotos, onChange }) => {
       })
       .then((response) => {
         const { data: filenames } = response;
+
         onChange((prev) => {
           return [...prev, ...filenames];
         });
+        
       });
-  }
+  } 
   return (
     <>
       <h2 className="md:text-2xl text-xl md:mt-4 mt-2">Photos</h2>
@@ -68,7 +70,7 @@ const Photouploader = ({ addedPhotos, onChange }) => {
             <div key={link} className="flex relative">
               <img
                 className="rounded-2xl object-cover w-full"
-                src={"http://localhost:4000/uploads/" + link}
+                src={link}
                 alt=""
               />
               <button

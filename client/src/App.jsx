@@ -11,6 +11,7 @@ import Placespage from "./pages/Placespage.jsx";
 import Placesformpage from "./pages/Placesformpage.jsx";
 import Placepage from "./pages/Placepage.jsx";
 import BookingsPage from "./pages/BookingsPage.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
 
 
 
@@ -30,6 +31,7 @@ function App() {
     <Route path="/account/places/:id" element={<Placesformpage/>}/>
     <Route path="/place/:id" element={<Placepage/>}/>
     <Route path="/account/bookings" element={<BookingsPage/>}/>
+    <Route path="/search-results/:query" element={<SearchPage/>}/>
     
     
     </Route>

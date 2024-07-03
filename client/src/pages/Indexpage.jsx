@@ -24,9 +24,10 @@ const Indexpage = () => {
           <Link to={"/place/" + place._id} key={place._id} className="z-10">
             <div className="flex bg-gray-500 rounded-xl ">
               <img
-                src={`http://localhost:4000/uploads/${place.photos[0]}`}
+                src={place.photos[0]}
                 className="aspect-square object-cover rounded-xl md:transition duration-300 md:hover:scale-[1.03] "
                 alt=""
+          
               />
             </div>
 

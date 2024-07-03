@@ -47,7 +47,7 @@ const BookingsPage = () => {
               <div className="w-[15rem] h-[15rem]  max-sm:w-[9rem] max-sm:h-[9rem]  max-md:w-[12rem] max-md:h-[12rem]   overflow-hidden  shrink-0 rounded-l-2xl relative">
                   {booking.place.photos.length > 0 && (
                   <img
-                    src={`http://localhost:4000/uploads/${booking.place.photos[0]}`}
+                    src={booking.place.photos[0]}
                     alt=""
                     className="object-cover w-full h-full"
                   />

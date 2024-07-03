@@ -78,7 +78,7 @@ const BookinWidget = ({ place }) => {
   if (redirect) return <Navigate to={"/account/bookings/"} />;
 
   return (
-    <div className="bg-white p-4  drop-shadow-[0_0px_10px_rgba(0,0,0,0.25)] rounded-xl max-w-lg mb-5     ">
+    <div className="bg-white p-4  drop-shadow-[0_0px_10px_rgba(0,0,0,0.25)] rounded-xl max-w-lg mb-5  sticky top-[8rem]   ">
       <div className="text-xl text-center font-semibold text-primary">
         Price: ₹{place.price}/Night
       </div>

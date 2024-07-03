@@ -1,12 +1,39 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
+import axios from "axios";
+import SearchPage from "./SearchPage";
 
 const Header = () => {
   const { userinfo } = useContext(UserContext);
+  const [search, setSearch] = useState(false);
+  const [query, setQuery] = useState("");
+  const [list, setList] = useState([]);
+  const [redirect, setRedirect] = useState(false);
+
+  // async function handleSearch(ev) {
+  //   ev.preventDefault();
+  //   if(query){
+  //   const response = await axios.get(`/search/${query}`);
+  //   if (response.status === 200) {
+  //     setQuery("");
+  //     setList(response.data);
+  //     setRedirect(true);
+  //   }
+  // }}
+  
+  
+  // if(redirect){
+  //   return <Navigate to={"/search-results"} state={{ list }} />;
+  // }
+
+  function handleSearch(){
+    setQuery("");
+    setSearch(false);
+  }
 
   return (
-    <header className="flex justify-between  ">
+    <header className="flex justify-between bg-gray-100 border-gray-300 border-b-2  px-4 sm:px-8 py-4 sticky top-0 z-40 ">
       <Link to={"/"} className="flex items-center gap-1 text-primary ">
         <img
           className="sm:w-9 sm:h-9 h-8 w-8"
@@ -14,15 +41,20 @@ const Header = () => {
           alt=""
         />
 
-        <span className="font-bold text-xl max-lg:hidden">Airbnb</span>
+        <span className="font-bold text-xl max-lg:hidden">RoomBook</span>
       </Link>
-      <div className="flex items-center sm:gap-3 gap-[5px] border border-gray-300 rounded-full py-2 sm:px-4 px-2 shadow-md shadow-gray-300 lg:ml-28">
+      <div className=" relative flex items-center sm:gap-3 gap-[5px] border border-gray-300 rounded-full py-2 sm:px-4 px-2 shadow-md shadow-gray-300 lg:ml-28 ">
         <div>Anywhere</div>
         <div className="border-l border-gray-300  sm:h-8 h-6  "></div>
         <div className="text-nowrap">Any week</div>
         <div className="border-l border-gray-300  sm:h-8 h-6"></div>
         <div className="text-gray-400 text-nowrap">Add guests</div>
-        <button className="bg-primary text-white sm:p-2 p-1 rounded-full">
+        <button
+          className="bg-primary text-white sm:p-2 p-1 rounded-full"
+          onClick={() => {
+            setSearch(!search);
+          }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -38,6 +70,45 @@ const Header = () => {
             />
           </svg>
         </button>
+        <div
+          className={`absolute top-[3.2rem] left-10 ${
+            search ? "flex" : "hidden"
+          } `}
+        >
+        
+          <input
+            type="text"
+            placeholder="Search"
+            value={query}
+            onChange={(ev) => setQuery(ev.target.value)}
+            
+          />
+          <Link  to={"/search-results/"+query}      
+            className=" bg-primary py-4 px-2 rounded-md"
+            //onClick={handleSearch}
+            onClick={handleSearch}
+
+          >
+          
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 "
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </Link>
+          
+         
+        </div>
+       
       </div>
       <div className="flex gap-4 items-center">
         <div className="flex  gap-3 items-center max-lg:hidden">
