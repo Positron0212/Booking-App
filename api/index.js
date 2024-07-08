@@ -10,8 +10,8 @@ const bcrypt = require("bcryptjs");
 const imageDownloader = require("image-downloader");
 const fs = require("fs");
 const multer = require("multer");
-const fileupload=require("express-fileupload");
-const cloudinary=require("cloudinary").v2;
+const fileupload = require("express-fileupload");
+const cloudinary = require("cloudinary").v2;
 
 require("dotenv").config();
 
@@ -21,18 +21,19 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 
-
 const salt = bcrypt.genSaltSync(10);
-const secret =process.env.secret_key;
+const secret = process.env.secret_key;
 
-app.use(fileupload({
-  useTempFiles:true
-}))
+app.use(
+  fileupload({
+    useTempFiles: true,
+  })
+);
 
-cloudinary.config({ 
-  cloud_name:process.env.cloud_name , 
-  api_key: process.env.api_key, 
-  api_secret: process.env.api_secret 
+cloudinary.config({
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.api_key,
+  api_secret: process.env.api_secret,
 });
 
 app.post("/api/register", async (req, res) => {
@@ -54,24 +55,27 @@ app.post("/api/login", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { email, password } = req.body;
   const userDoc = await user.findOne({ email });
-  const passok = bcrypt.compareSync(password, userDoc.password);
+  if (!userDoc) res.status(400).json("wrong credentials");
+  else {
+    const passok = bcrypt.compareSync(password, userDoc.password);
 
-  if (passok) {
-    jwt.sign(
-      { email, id: userDoc._id, name: userDoc.name },
-      secret,
-      {},
-      (err, token) => {
-        if (err) throw err;
-        res.cookie("token", token).json({
-          id: userDoc._id,
-          email,
-          name: userDoc.name,
-        });
-      }
-    );
-  } else {
-    res.status(400).json("wrong credentials");
+    if (passok) {
+      jwt.sign(
+        { email, id: userDoc._id, name: userDoc.name },
+        secret,
+        {},
+        (err, token) => {
+          if (err) throw err;
+          res.cookie("token", token).json({
+            id: userDoc._id,
+            email,
+            name: userDoc.name,
+          });
+        }
+      );
+    } else {
+      res.status(400).json("wrong credentials");
+    }
   }
 });
 
@@ -130,29 +134,29 @@ app.post("/api/uploads", (req, res) => {
 
   Promise.all(uploadPromises)
     .then((results) => {
-      res.json(results); 
+      res.json(results);
     })
     .catch((error) => {
-      res.status(500).json({ error: "Failed to upload images", details: error });
+      res
+        .status(500)
+        .json({ error: "Failed to upload images", details: error });
     });
 });
 
-  
-  // cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
-  //   res.json(result.url);
-  // })
+// cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
+//   res.json(result.url);
+// })
 
-  // let uploadedfiles = [];
-  // for (const element of req.files) {
-  //   const { originalname, path } = element;
-  //   const parts = originalname.split(".");
-  //   const ext = parts[parts.length - 1];
-  //   const newpath = path + "." + ext;
-  //   fs.renameSync(path, newpath);
-  //   uploadedfiles.push(newpath.replace("uploads", ""));
-  // }
-  // res.json(uploadedfiles);
-
+// let uploadedfiles = [];
+// for (const element of req.files) {
+//   const { originalname, path } = element;
+//   const parts = originalname.split(".");
+//   const ext = parts[parts.length - 1];
+//   const newpath = path + "." + ext;
+//   fs.renameSync(path, newpath);
+//   uploadedfiles.push(newpath.replace("uploads", ""));
+// }
+// res.json(uploadedfiles);
 
 app.post("/api/places", (req, res) => {
   mongoose.connect(process.env.mongo_url);
@@ -273,6 +277,7 @@ app.post("/api/booking", async (req, res) => {
       phone: mobile,
       price: total_price,
       user: id,
+      NumberOfGuest
     });
     res.json(doc);
   });
@@ -310,38 +315,50 @@ app.get("/api/deletebooking/:id", async (req, res) => {
 app.post("/api/available", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
   const { id, checkOut, checkIn } = req.body;
- 
 
-  const check = await booking.findOne({ place: id });
-  if (!check) res.status(200).json(true);
-  else {
-    const bookingDocs = await booking.findOne({
+    const bookingDocs = await booking.find({
       place: id,
-      $or: [{ checkOut: { $lt: checkIn } }, { checkIn: { $gt: checkOut } }],
+      $or: [
+      { checkIn: { $lt: checkOut, $gte: checkIn } },
+      { checkOut: { $gt: checkIn, $lte: checkOut } }
+    ]
     });
-    if (!bookingDocs) {
-      res.status(200).json(false);
-    } else {
+
+    if (bookingDocs.length==0) {
+     
       res.status(200).json(true);
+    } else {
+      
+      res.status(200).json(false);
     }
-  }
+  
 });
 
-app.get("/api/search/:query",async (req,res)=>{
+app.get("/api/search/:query", async (req, res) => {
   mongoose.connect(process.env.mongo_url);
-const {query}=req.params;
-const docs=await place.find({
-  $or:[
-    {address:{$regex:query,$options:"i"}},
-    {title:{$regex:query,$options:"i"}}
-  ]});
+  const { query } = req.params;
+  const docs = await place.find({
+    $or: [
+      { address: { $regex: query, $options: "i" } },
+      { title: { $regex: query, $options: "i" } },
+    ],
+  });
 
-    res.json(docs); 
+  res.json(docs);
 });
 
+app.get("/api/bookings/:id", async (req, res) => {
+  mongoose.connect(process.env.mongo_url);
+  const { id } = req.params;
+  const currentDate = new Date();
+    const docs = await booking
+      .find({ place: id, checkIn: { $gte: currentDate } })
+      .select("checkIn checkOut");
+     if(docs)
+      res.json(docs);
+  }
+);
 
 app.listen(4000, () => {
   console.log("server is running");
 });
-
-

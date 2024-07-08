@@ -17,7 +17,15 @@ const ProfilePage = () => {
   }
 
   if (!ready) {
-    return "...loading";
+      return(
+        <div className="flex flex-col items-center justify-center flex-grow">
+        <div className=" h-12 w-12 border-4 border-r-transparent animate-spin border-solid rounded-full border-black">
+        </div>
+      
+        <h1 className="font-semibold">Loading...</h1>
+        
+        </div>
+      ); 
   }
   if (ready && !userinfo) {
     return <Navigate to={"/"} />;

@@ -31,8 +31,12 @@ const Login = () => {
     } catch (error) {
       if (error.response && error.response.status === 400) {
         alert("Wrong credentials");
+        setpassword("");
+        setemail("");
       } else {
         alert("An error occurred. Please try again later.");
+        setpassword("");
+        setemail("");
       }
     }
   }
@@ -41,7 +45,7 @@ const Login = () => {
     return <Navigate to={"/"} />;
   }
   return (
-    <div className="grow flex  items-center justify-around">
+    <div className="flex-grow flex items-center justify-center ">
       <div className="mb-12">
         <h1 className="font-bold text-2xl  md:text-3xl  text-center ">Login</h1>
         <form className="md:max-w-lg max-w-sm mx-auto p-4" onSubmit={login}>

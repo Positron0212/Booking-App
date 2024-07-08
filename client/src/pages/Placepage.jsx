@@ -8,10 +8,12 @@ const Placepage = () => {
   const [place, setplace] = useState({});
   const [showAllphotos, setshowAllphotos] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [datafetched,setdatafetched]=useState(false);
   useEffect(() => {
     axios.get(`/places/${id}`).then((response) => {
       const { data } = response;
       setplace(data);
+      setdatafetched(true);
     });
   }, [id]);
 
@@ -21,6 +23,19 @@ const Placepage = () => {
   function handleshowless() {
     setShowMore(false);
   }
+  
+if(!datafetched){
+  return(
+    <div className="flex flex-col items-center justify-center flex-grow">
+    <div className=" h-12 w-12 border-4 border-r-transparent animate-spin border-solid rounded-full border-black">
+    </div>
+  
+    <h1 className="font-semibold">Loading...</h1>
+    
+    </div>
+  );
+}  
+else{
 
   if (showAllphotos)
     return (
@@ -58,7 +73,7 @@ const Placepage = () => {
     );
   else {
     return (
-      <div className="mt-4 ">
+      <div className="sm:mt-4 ">
         <h1 className="lg:text-3xl md:text-2xl text-xl font-semibold ">
           {place.title}
         </h1>
@@ -139,7 +154,7 @@ const Placepage = () => {
           </div>
         </div>
 
-        <div className="grid gap-2 md:mt-7 mt-5  grid-cols-1 md:grid-cols-[2fr_1fr] max-md:gap-1">
+        <div className="grid gap-2 md:mt-7 mt-5  grid-cols-1 md:grid-cols-[2fr_1fr] max-md:gap-5">
           <div>
             <div className="leading-8 md:mb-5 mb-3 whitespace-pre-wrap  border-dashed border-b-2 border-gray-500 pb-2">
               <h2 className=" text-xl font-semibold  md:text-2xl lg:text-3xl mb-1">
@@ -177,7 +192,7 @@ const Placepage = () => {
             {showMore && (
               <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center ">
                
-                <div className="whitespace-pre-line bg-white p-6 rounded-lg max-w-3xl  mx-auto max-h-[30rem] overflow-y-auto">
+                <div className="whitespace-pre-line bg-white p-6 rounded-lg sm:max-w-3xl max-w-[22rem]  mx-auto max-h-[30rem] overflow-y-auto">
                 <button onClick={handleshowless} className="w-full ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -236,5 +251,6 @@ const Placepage = () => {
       </div>
     );
   }
-};
+}
+}
 export default Placepage;

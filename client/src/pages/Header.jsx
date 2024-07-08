@@ -33,7 +33,7 @@ const Header = () => {
   }
 
   return (
-    <header className="flex justify-between bg-gray-100 border-gray-300 border-b-2  px-4 sm:px-8 py-4 sticky top-0 z-40 ">
+    <header className="flex justify-between bg-gray-100 border-gray-300 border-b-2  px-2 sm:px-8 py-4 sticky top-0 z-40 ">
       <Link to={"/"} className="flex items-center gap-1 text-primary ">
         <img
           className="sm:w-9 sm:h-9 h-8 w-8"

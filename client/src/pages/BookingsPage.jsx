@@ -6,6 +6,7 @@ import { differenceInCalendarDays, differenceInDays, format } from "date-fns";
 
 const BookingsPage = () => {
   const [allbookings, setallbooking] = useState([]);
+  const [datafetched,setdatafetched]=useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   let isExpired=""
   
@@ -13,6 +14,7 @@ const BookingsPage = () => {
     axios.get("/booking", { withCredentials: true }).then((response) => {
       const { data } = response;
       setallbooking(data);
+      setdatafetched(true);
     });
   }, []);
  
@@ -28,6 +30,19 @@ const BookingsPage = () => {
   }
     
 }
+if(!datafetched){
+  return(
+    <div className="flex flex-col items-center justify-center flex-grow">
+    <div className=" h-12 w-12 border-4 border-r-transparent animate-spin border-solid rounded-full border-black">
+    </div>
+  
+    <h1 className="font-semibold">Loading...</h1>
+    
+    </div>
+  );
+}  
+
+else{
 
 
 
@@ -136,7 +151,7 @@ const BookingsPage = () => {
                   Total price : ₹{booking.price}
                 </div>
 
-                <p className="md:mt-3 mt-2  items-center flex md:text-base text-sm ">
+                <p className="md:mt-3 mt-2  items-center flex md:text-base text-sm  ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -156,7 +171,8 @@ const BookingsPage = () => {
                       d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
                     />
                   </svg>
-                  {booking.place.address}
+                  <span className="truncate">{booking.place.address}</span>
+                  
                 </p>
                 </div>
                 
@@ -166,6 +182,7 @@ const BookingsPage = () => {
       </div>
     </div>
   );
+}
 };
 
 export default BookingsPage;

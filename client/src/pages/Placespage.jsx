@@ -6,12 +6,27 @@ import axios from "axios";
 
 const Placespage = () => {
   const [places, setplaces] = useState([]);
+  const [datafetched,setdatafetched]=useState(false);
 
   useEffect(() => {
     axios.get("/places", { withCredentials: true }).then(({ data }) => {
       setplaces(data);
+      setdatafetched(true);
     });
   }, []);
+
+  if(!datafetched){
+    return(
+      <div className="flex flex-col items-center justify-center flex-grow">
+      <div className=" h-12 w-12 border-4 border-r-transparent animate-spin border-solid rounded-full border-black">
+      </div>
+    
+      <h1 className="font-semibold">Loading...</h1>
+      
+      </div>
+    );
+  }  
+  else{
   return (
     <div>
       <AccountNav />
@@ -85,6 +100,7 @@ const Placespage = () => {
       </div>
     </div>
   );
+}
 };
 
 export default Placespage;

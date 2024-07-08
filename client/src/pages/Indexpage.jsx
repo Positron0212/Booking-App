@@ -7,15 +7,28 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Indexpage = () => {
   const [allplaces, setallplaces] = useState([]);
+  const [datafetched,setdatafetched]=useState(false);
 
   useEffect(() => {
     axios.get("/allplaces").then((response) => {
       const { data } = response;
       setallplaces(data);
+      setdatafetched(true);
     });
   }, []);
 
+if(!datafetched){
+  return(
+    <div className="flex flex-col items-center justify-center flex-grow">
+    <div className=" h-12 w-12 border-4 border-r-transparent animate-spin border-solid rounded-full border-black">
+    </div>
   
+    <h1 className="font-semibold">Loading...</h1>
+    
+    </div>
+  );
+}  
+else{
 
   return (
     <div className="grid gap-x-6 gap-y-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10   ">
@@ -57,7 +70,7 @@ const Indexpage = () => {
           
         ))}
     </div>
-  );
+  )};
 };
 
 export default Indexpage;
