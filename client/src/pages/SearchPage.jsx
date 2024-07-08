@@ -4,20 +4,29 @@ import { Link, useParams } from "react-router-dom";
 
 const SearchPage = () => {
   const [list, setList] = useState([]);
-  const [redirect, setRedirect] = useState(false);
+  const [datafetched,setdatafetched]=useState(false);
   const { query } = useParams();
   useEffect(() => {
     if (query) {
       axios.get(`/search/${query}`).then((response) => {
         if (response.status === 200) {
           setList(response.data);
-          setRedirect(true);
+          setdatafetched(true);
         }
       });
     }
   }, [query]);
-  if (!redirect) {
-    return <div>...loading</div>;
+  if(!datafetched){
+    return(
+      <div className="flex flex-col items-center justify-center flex-grow">
+      <div className=" h-12 w-12 border-4 border-r-transparent animate-spin border-solid rounded-full border-black">
+      </div>
+    
+      <h1 className="font-semibold">Loading...</h1>
+      
+      </div>
+    );
+  
   } else {
     if (list.length === 0)
       return (

@@ -241,7 +241,7 @@ else{
               <h2 className="text-xl  md:text-2xl lg:text-3xl font-semibold pt-2 border-dashed border-t-2 border-gray-500 ">
                 Extra Info:
               </h2>
-              <p className=" md:leading-7 text-gray-600 whitespace-pre-wrap">
+              <p className=" leading-8  whitespace-pre-wrap">
                 {place.extrainfo}
               </p>
             </div>

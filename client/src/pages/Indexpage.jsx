@@ -31,7 +31,7 @@ if(!datafetched){
 else{
 
   return (
-    <div className="grid gap-x-6 gap-y-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10   ">
+    <div className="grid gap-x-6 lg:gap-y-8  md:gap-y-6  gap-y-4   grid-cols-2 md:grid-cols-3 lg:grid-cols-4   md:mt-5 mt-2   ">
       {allplaces.length > 0 &&
         allplaces.map((place) => (
           <Link to={"/place/" + place._id} key={place._id} className="z-10">
